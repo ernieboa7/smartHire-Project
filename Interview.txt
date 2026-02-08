@@ -1,0 +1,258 @@
+backend/
+   SmartHire/
+      Controllers/
+      Models/
+      Services/
+      Repositories/
+      Infrastructure/
+      Integrations/
+      .env
+      appsettings.json   <-- the good one
+      appsettings.Development.json
+      Program.cs
+      SmartHire.csproj
+
+
+
+
+📘 EXAM-READY NOTES
+
+ASP.NET Core Architecture explained with Restaurant Analogy
+
+1️⃣ Program.cs (Restaurant Manager)
+Definition (exam-friendly):
+Program.cs is the application entry point that configures services, middleware, routing, and application startup.
+Restaurant analogy:
+
+The restaurant manager
+Hires staff
+Assigns roles
+Sets work shifts
+Opens doors
+
+Controls how customers move inside
+
+📌 Does NOT:
+Cook food
+Take orders
+Access the database
+
+2️⃣ Dependency Injection (DI) — Staff Assignment
+📌 What is Dependency Injection?
+
+Dependency Injection is a design pattern where objects receive their dependencies from a central container instead of creating them directly.
+
+In Program.cs
+builder.Services.AddScoped<ICandidateService, CandidateService>();
+Restaurant analogy
+
+🧑‍💼 Manager says:
+
+“Whenever someone asks for a cook, assign this cook.”
+
+✔ Controllers don’t hire staff
+✔ Services don’t hire repositories
+✔ Manager assigns dependencies automatically
+
+3️⃣ Scoped vs Singleton — Shift Schedules
+🔁 Singleton
+builder.Services.AddSingleton<MongoDbContext>();
+
+
+Meaning:
+One instance for the entire app lifetime
+
+Restaurant analogy:
+One store room supervisor for the whole day
+
+✔ Shared resource
+✔ Efficient for database connections
+
+🔁 Scoped
+builder.Services.AddScoped<IChatService, ChatService>();
+
+
+Meaning:
+One instance per HTTP request
+
+Restaurant analogy:
+Each customer gets their own waiter & cook
+
+✔ No shared request data
+✔ Safe for web APIs
+
+4️⃣ Middleware Order — Security & Customer Flow
+Middleware = Request pipeline
+app.UseCors();
+app.UseAuthorization();
+app.MapControllers();
+
+Restaurant analogy
+Middleware	Real-world meaning
+UseCors	Door security (who can enter)
+UseAuthorization	ID check (who can order)
+MapControllers	Order counters
+
+📌 Order matters
+Security must happen before orders are taken.
+
+5️⃣ Controllers — Order Counters
+
+Definition:
+Controllers handle HTTP requests and responses.
+
+Responsibilities:
+Receive request
+Call service
+Return response
+Restaurant analogy:
+Order counter
+Does not cook
+Passes order to kitchen
+
+6️⃣ Services — Kitchen (Business Logic)
+
+Definition:
+Services contain business rules and workflows.
+Responsibilities:
+Validate data
+Apply rules
+Coordinate repositories and integrations
+
+Restaurant analogy:
+Kitchen prepares meals
+Decides ingredients
+Calls guest chef (OpenAI) if needed
+
+7️⃣ Repositories + MongoDB — Store Room
+
+Definition:
+Repositories handle data access.
+
+Restaurant analogy:
+Store room clerk fetches ingredients
+MongoDB = fridge + pantry
+
+📌 Services never talk to MongoDB directly — only through repositories.
+
+8️⃣ OpenAI Client — Guest Chef
+
+Definition:
+External integration used by services.
+
+Restaurant analogy:
+Special guest chef hired for AI dishes
+Kitchen doesn’t know how the chef works internally
+
+🧱 CLEAN ARCHITECTURE MAPPING
+┌────────────────────────────┐
+│ Controllers (Presentation) │
+└──────────────┬─────────────┘
+               ↓
+┌────────────────────────────┐
+│ Services (Application)     │
+└──────────────┬─────────────┘
+               ↓
+┌────────────────────────────┐
+│ Repositories (Data Access) │
+└──────────────┬─────────────┘
+               ↓
+┌────────────────────────────┐
+│ Infrastructure (Mongo, AI) │
+└────────────────────────────┘
+
+
+Key Clean Architecture rule:
+
+Dependencies always point inward.
+
+✔ Controllers depend on Services
+✔ Services depend on Interfaces
+✔ Infrastructure depends on nothing above it
+
+🧩 SOLID PRINCIPLES (EXAM GOLD)
+S – Single Responsibility
+
+Controller: HTTP only
+
+Service: business logic
+
+Repository: data access
+✔ One job per class
+
+D – Dependency Inversion
+
+Code depends on interfaces, not implementations
+
+IChatService → ChatService
+
+
+✔ Easy to replace
+✔ Easy to test
+
+🧪 WHY DI MAKES TESTING EASY (VERY IMPORTANT)
+Without DI ❌
+var service = new ChatService(new MongoDbContext());
+
+
+Real DB
+Hard to test
+Slow
+Fragile
+
+With DI ✅
+IChatService service = new FakeChatService();
+
+
+Restaurant analogy:
+For training, manager hires a practice chef
+No real ingredients wasted
+
+✔ You can mock repositories
+✔ No real MongoDB
+✔ No real OpenAI calls
+
+📌 This is why interfaces + DI = testability
+
+🧠 ONE-PAGE MEMORY SUMMARY
+Program.cs = Restaurant Manager
+DI = Staff assignment
+Singleton = One staff for whole day
+Scoped = One staff per customer
+Middleware = Security + flow
+Controllers = Order counters
+Services = Kitchen
+Repositories = Store room clerks
+MongoDB = Pantry
+OpenAI = Guest chef
+
+
+
+
+
+Model
+
+The model is the food recipe and ingredient description.
+Why:
+It describes what the food looks like, what fields it has, and how it is structured — not how it’s cooked or served.
+
+Examples in code:
+Candidate
+Job
+ChatSession
+
+📌 Models carry data between the kitchen, counter, and store room.
+
+🧾 appsettings.json
+appsettings.json is the restaurant’s rulebook and supplier contact list.
+Why:
+It contains:
+Where ingredients come from (MongoDB connection string)
+Which guest chef to call (OpenAI settings)
+House rules (logging, limits, etc.)
+
+📌 Staff read from it, but do not change it.
+
+🧠 Ultra-short memory hook (exam-ready)
+Model = What the food is
+appsettings.json = How and where the restaurant gets things

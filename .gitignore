@@ -1,0 +1,61 @@
+####################################
+# OS / General
+####################################
+.DS_Store
+Thumbs.db
+
+####################################
+# ENV FILES (IMPORTANT)
+####################################
+.env
+.env.*
+!.env.example
+
+####################################
+# Node / Frontend
+####################################
+node_modules/
+dist/
+build/
+.vite/
+.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+####################################
+# .NET Backend
+####################################
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.pdb
+
+####################################
+# Visual Studio / VS Code
+####################################
+.vs/
+.vscode/
+*.code-workspace
+
+####################################
+# Logs
+####################################
+logs/
+*.log
+
+####################################
+# Test outputs
+
+TestResults/
+
+####################################
+# Coverage
+####################################
+coverage/
+
+# Hidden Dotenv
+frontend/smart-hire-web/.env
+backend/SmartHire/.env
