@@ -59,3 +59,4 @@ coverage/
 # Hidden Dotenv
 frontend/smart-hire-web/.env
 backend/SmartHire/.env
+Interview.txt
