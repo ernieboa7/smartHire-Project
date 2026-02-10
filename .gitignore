@@ -60,3 +60,6 @@ coverage/
 frontend/smart-hire-web/.env
 backend/SmartHire/.env
 Interview.txt
+
+
+appsettings.Development.json
